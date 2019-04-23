@@ -3,7 +3,7 @@ import {Todo} from "./common/todo.model";
 import {TodoListService} from "./common/todo-list.service";
 import {NgForm} from "@angular/forms";
 import {Subscription} from "rxjs";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -23,20 +23,25 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private todoListService: TodoListService, private router: Router) {}
   ngOnInit() {
     this.subscription = this.todoListService.onChange.subscribe(() => {
-      this.todos = this.todoListService.getTodos();
-      this.remainingCount = this.todoListService.countRemainingTodos();
-      this.completedCount = this.todos.length - this.remainingCount;
+      this.updateTodos();
     });
-    this.router.events.subscribe(() => {
-      this.statusFilter = this.router.url.slice(1, 0);
+    this.router.events.subscribe((event) => {
+      if(event instanceof NavigationEnd) {
+        this.statusFilter = this.router.url.slice(1, this.router.url.length);
+      }
     });
-    //this.statusFilter = this.router.url.slice(1, 0);
-    this.todos = this.todoListService.getTodos();
+    this.updateTodos();
     this.saving = false;
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  updateTodos() {
+    this.todos = this.todoListService.getTodos();
+    this.remainingCount = this.todoListService.countRemainingTodos();
+    this.completedCount = this.todos.length - this.remainingCount;
   }
 
   addTodo(form: NgForm) {

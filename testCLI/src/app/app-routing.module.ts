@@ -4,7 +4,7 @@ import {AppComponent} from "./app.component";
 
 const routes: Routes = [
   {path: 'active', component: AppComponent},
-  {path: 'complete', component: AppComponent},
+  {path: 'completed', component: AppComponent},
   {path: '', component: AppComponent, pathMatch: 'full'}
 ];
 

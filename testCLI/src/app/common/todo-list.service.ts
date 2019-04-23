@@ -79,5 +79,8 @@ export class TodoListService {
 
   private loadFromLocalStorage() {
     this.todos = JSON.parse(localStorage.getItem(this.storageID));
+    if(this.todos === null) {
+      this.todos = [];
+    }
   }
 }

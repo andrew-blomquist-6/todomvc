@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from "../common/todo.model";
 import {TodoListService} from "../common/todo-list.service";
 import {Subscription} from "rxjs";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Component({
   selector: 'app-todo-list',
@@ -21,7 +21,11 @@ export class TodoListComponent implements OnInit, OnDestroy {
     this.subscription = this.todoListService.onChange.subscribe(() => {
       this.updateList();
     });
-    this.updateList();
+    this.router.events.subscribe((event) => {
+      if(event instanceof NavigationEnd) {
+        this.updateList();
+      }
+    });
     this.allChecked = false;
   }
 
