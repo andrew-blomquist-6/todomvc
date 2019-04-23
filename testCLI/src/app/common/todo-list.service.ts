@@ -7,10 +7,11 @@ import {Todo} from "./todo.model";
 export class TodoListService {
 
   public onChange: EventEmitter<any>;
-  //toggle this boolean if you don't want to use local storage
+  //change this boolean if you don't want to use local storage
   private useLocalStorage = true;
   private storageID = "todos-angular";
   private todos: Todo[];
+  private editingTodo: Todo;
 
   constructor() {
     if (this.useLocalStorage) {
@@ -19,6 +20,7 @@ export class TodoListService {
       this.todos = [];
     }
     this.onChange = new EventEmitter<any>();
+    this.editingTodo = null;
   }
 
   getTodos() {
@@ -35,6 +37,14 @@ export class TodoListService {
       this.saveToLocalStorage();
     }
     this.onChange.emit();
+  }
+
+  setEditingTodo(todo: Todo) {
+    this.editingTodo = todo;
+  }
+
+  getEditingTodo() {
+    return this.editingTodo;
   }
 
   updateTodo(index: number, todo: Todo) {

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Todo} from "../common/todo.model";
 import {TodoListService} from "../common/todo-list.service";
 import {NgForm} from "@angular/forms";
@@ -14,6 +14,8 @@ export class TodoComponent implements OnInit {
   @Input() todo: Todo;
   @Input() index: number;
 
+  @ViewChild('f') form: NgForm;
+
   originalTodo: Todo;
   editing: boolean;
   savedEvent: string;
@@ -22,7 +24,8 @@ export class TodoComponent implements OnInit {
 
   ngOnInit() {
     this.originalTodo = _.cloneDeep(this.todo);
-    this.editing = false;
+    //TODO: get the form's initial value set
+    this.resetForm();
   }
 
   toggleCompleted() {
@@ -32,27 +35,37 @@ export class TodoComponent implements OnInit {
 
   editTodo() {
     this.editing = true;
+    this.todoListService.setEditingTodo(this.todo);
   }
 
   removeTodo() {
     this.todoListService.deleteTodo(this.index);
   }
 
-  saveEdits(mode: string, form: NgForm) {
+  saveEdits(mode: string) {
     //blur is triggered on a submit, this is here to prevent a double-submit
     if(mode === 'blur' && this.savedEvent === 'submit') {
       this.savedEvent = '';
       return;
     }
-    this.savedEvent = mode;
-
-
-    this.editing = false;
+    else if(mode !== 'blur') {
+      //it was a submit
+      this.savedEvent = mode;
+      this.todo.title = this.form.value.title;
+      this.todoListService.updateTodo(this.index, this.todo);
+    }
+    this.resetForm();
   }
 
   revertEdits() {
     this.todo = _.cloneDeep(this.originalTodo);
+    this.resetForm();
+  }
+
+  resetForm() {
+    this.form.value.title = this.todo.title;
     this.editing = false;
+    this.todoListService.setEditingTodo(null);
   }
 
 }

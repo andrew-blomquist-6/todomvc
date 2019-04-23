@@ -3,13 +3,14 @@
   <label (dblclick)="editTodo()">{{todo.title}}</label>
   <button class="destroy" (click)="removeTodo()"></button>
 </div>
-<form (ngSubmit)="saveEdits('submit', f)" #f="ngForm">
+<form (ngSubmit)="saveEdits('submit')" #f="ngForm">
   <input class="edit"
-         ng-trim="false"
-         name="title"
          ngModel
-         todo-escape="revertEdits()"
-         ng-blur="saveEdits('blur', f)"
+         name="title"
+         [value]="todo.title"
+         (blur)="saveEdits('blur')"
+         appEscape
+         (escapePressed)="revertEdits()"
          appFocus
          [shouldFocus]="editing"
   >

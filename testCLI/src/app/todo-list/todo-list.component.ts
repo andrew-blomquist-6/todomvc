@@ -32,15 +32,23 @@ export class TodoListComponent implements OnInit, OnDestroy {
   updateList() {
     this.todos = this.todoListService.getTodos();
     if (this.router.url === '/active') {
-      console.log('need to show only active todos');
+      this.todos = this.todos.filter((todo) => {
+        return !todo.completed;
+      });
     }
     else if (this.router.url === '/completed') {
-      console.log('need to show only completed todos');
+      this.todos = this.todos.filter((todo) => {
+        return todo.completed;
+      });
     }
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  isEditingTodo(todo: Todo) {
+    return todo === this.todoListService.getEditingTodo();
   }
 
   markAll() {

@@ -45,8 +45,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   addTodo(form: NgForm) {
-    this.todoListService.addTodo(new Todo(false, form.value.todoText));
-    form.reset();
+    const text = form.value.todoText;
+    if(text.trim().length) {
+      this.todoListService.addTodo(new Todo(false, text));
+      form.reset();
+    }
   }
 
   clearCompletedTodos() {
