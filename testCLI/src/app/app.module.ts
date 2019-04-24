@@ -8,6 +8,10 @@ import { TodoListComponent } from './todo-list/todo-list.component';
 import {FormsModule} from "@angular/forms";
 import { FocusDirective } from './common/focus.directive';
 import { EscapeDirective } from './common/escape.directive';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -20,7 +24,9 @@ import { EscapeDirective } from './common/escape.directive';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
+    !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [],
   bootstrap: [AppComponent]
