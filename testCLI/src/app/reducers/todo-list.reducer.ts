@@ -4,6 +4,7 @@ import {TodoListActions, TodoListActionTypes} from "../actions/todo-list.actions
 
 export interface TodoListState {
   todoList: Array<Todo>,
+  //TODO: should we move this somewhere else?
   editingTodo: Todo
 }
 

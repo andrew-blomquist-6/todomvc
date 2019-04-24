@@ -1,6 +1,5 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Todo} from "../common/todo.model";
-import {TodoListService} from "../common/todo-list.service";
 import {NgForm} from "@angular/forms";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
@@ -23,8 +22,7 @@ export class TodoComponent implements OnInit {
   editing: boolean;
   savedEvent: string;
 
-  constructor(private todoListService: TodoListService,
-              private store: Store<State>) { }
+  constructor(private store: Store<State>) { }
 
   ngOnInit() {
     this.originalTodo = _.cloneDeep(this.todo);
@@ -35,18 +33,15 @@ export class TodoComponent implements OnInit {
   toggleCompleted() {
     this.todo.completed = !this.todo.completed;
     this.store.dispatch(new UpdateTodo(this.todo, this.index));
-    // this.todoListService.updateTodo(this.index, this.todo);
   }
 
   editTodo() {
     this.editing = true;
     this.store.dispatch(new UpdateEditingTodo(this.todo));
-    // this.todoListService.setEditingTodo(this.todo);
   }
 
   removeTodo() {
     this.store.dispatch(new RemoveTodo(this.index));
-    // this.todoListService.deleteTodo(this.index);
   }
 
   saveEdits(mode: string) {
@@ -59,8 +54,7 @@ export class TodoComponent implements OnInit {
       //it was a submit
       this.savedEvent = mode;
       this.todo.title = this.form.value.title;
-      this.store.dispatch(new UpdateTodo(this.todo, this.index));
-      // this.todoListService.updateTodo(this.index, this.todo);
+      this.store.dispatch(new UpdateTodo(this.todo, this.index))
     }
     this.resetForm();
   }
@@ -74,7 +68,6 @@ export class TodoComponent implements OnInit {
     this.form.value.title = this.todo.title;
     this.editing = false;
     this.store.dispatch(new UpdateEditingTodo(null));
-    // this.todoListService.setEditingTodo(null);
   }
 
 }

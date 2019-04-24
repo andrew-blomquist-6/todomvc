@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from "./common/todo.model";
-import {TodoListService} from "./common/todo-list.service";
 import {NgForm} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {NavigationEnd, Router} from "@angular/router";
@@ -16,7 +15,6 @@ import {AddTodo, LoadTodoList, RemoveCompleted} from "./actions/todo-list.action
 export class AppComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
-  ngrxSubscription: Subscription;
   todos: Todo[];
   newTodo: string;
   saving: boolean;
@@ -26,15 +24,11 @@ export class AppComponent implements OnInit, OnDestroy {
   private loadFromStorage = true;
   private storageID = "todos-angular-ngrx";
 
-  constructor(private todoListService: TodoListService,
-              private router: Router,
+  constructor(private router: Router,
               private store: Store<State>) {}
 
   ngOnInit() {
-    // this.subscription = this.todoListService.onChange.subscribe(() => {
-    //   this.updateTodos();
-    // });
-    this.ngrxSubscription = this.store.select((state) => state.todoList).subscribe((state) => {
+    this.subscription = this.store.select((state) => state.todoList).subscribe((state) => {
       this.todos = state.todoList;
       this.remainingCount = this.countRemainingTodos();
       this.completedCount = this.todos.length - this.remainingCount;
@@ -44,6 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.statusFilter = this.router.url.slice(1, this.router.url.length);
       }
     });
+    //TODO: there is nothing saving to local storage right now
     if(this.loadFromStorage) {
       let tempList = JSON.parse(localStorage.getItem(this.storageID));
       if(tempList === null) {
@@ -55,8 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //this.subscription.unsubscribe();
-    this.ngrxSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   countRemainingTodos() {
@@ -69,24 +63,16 @@ export class AppComponent implements OnInit, OnDestroy {
     return counter;
   }
 
-  // updateTodos() {
-  //   this.todos = this.todoListService.getTodos();
-  //   this.remainingCount = this.todoListService.countRemainingTodos();
-  //   this.completedCount = this.todos.length - this.remainingCount;
-  // }
-
   submitTodo(form: NgForm) {
     const text = form.value.todoText;
     if(text.trim().length) {
       const newTodo = new Todo(false, text);
-      //this.todoListService.addTodo(newTodo);
       this.store.dispatch(new AddTodo(newTodo));
       form.reset();
     }
   }
 
   clearCompletedTodos() {
-    //this.todoListService.clearCompleted();
     this.store.dispatch(new RemoveCompleted());
   }
 
