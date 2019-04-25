@@ -5,7 +5,7 @@ import {
   createSelector,
   MetaReducer
 } from '@ngrx/store';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import {todoListReducer, TodoListState} from "./todo-list.reducer";
 
 export interface State {
@@ -15,6 +15,5 @@ export interface State {
 export const reducers: ActionReducerMap<State> = {
   todoList: todoListReducer
 };
-
 
 export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];

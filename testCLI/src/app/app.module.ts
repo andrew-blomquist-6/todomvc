@@ -9,9 +9,11 @@ import {FormsModule} from "@angular/forms";
 import { FocusDirective } from './common/focus.directive';
 import { EscapeDirective } from './common/escape.directive';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
+import { reducers, metaReducers } from './common/reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import {EffectsModule} from "@ngrx/effects";
+import {TodoListEffects} from "./common/effects/todo-list.effects";
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     FormsModule,
     StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot([TodoListEffects]),
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [],

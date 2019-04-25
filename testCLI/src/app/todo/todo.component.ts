@@ -3,8 +3,8 @@ import {Todo} from "../common/todo.model";
 import {NgForm} from "@angular/forms";
 import * as _ from 'lodash';
 import {Store} from "@ngrx/store";
-import {State} from "../reducers";
-import {RemoveTodo, UpdateEditingTodo, UpdateTodo} from "../actions/todo-list.actions";
+import {State} from "../common/reducers";
+import {RemoveTodo, UpdateEditingTodo, UpdateTodo} from "../common/actions/todo-list.actions";
 
 @Component({
   selector: 'app-todo',

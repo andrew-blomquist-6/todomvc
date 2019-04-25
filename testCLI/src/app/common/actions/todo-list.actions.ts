@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import {Todo} from "../common/todo.model";
+import {Todo} from "../todo.model";
 
 export enum TodoListActionTypes {
   LoadTodoList = '[TodoList] Load Todo List',
@@ -7,13 +7,17 @@ export enum TodoListActionTypes {
   UpdateTodo = '[TodoList] Update Todo',
   RemoveTodo = '[TodoList] Remove Todo',
   RemoveCompleted = '[TodoList] Remove Completed',
-  UpdateEditingTodo = '[TodoList] Update Editing Todo'
+  UpdateEditingTodo = '[TodoList] Update Editing Todo',
+  SaveToLocalStorage = '[TodoList] Save to Local Storage'
 }
+
+/*
+  TODO: lookup the merits of using a payload object vs. what we're doing now
+  aka: public payload: {todo: Todo, index: number}
+ */
 
 export class LoadTodoList implements Action {
   readonly type = TodoListActionTypes.LoadTodoList;
-
-  constructor(public todoList: Array<Todo>) {}
 }
 
 export class AddTodo implements Action {
@@ -44,9 +48,16 @@ export class UpdateEditingTodo implements Action {
   constructor(public todo: Todo) {}
 }
 
+export class SaveToLocalStorage implements Action {
+  readonly type = TodoListActionTypes.SaveToLocalStorage;
+
+  constructor(public storageID: string) {}
+}
+
 export type TodoListActions = LoadTodoList |
   AddTodo |
   UpdateTodo |
   RemoveTodo |
   RemoveCompleted |
-  UpdateEditingTodo;
+  UpdateEditingTodo |
+  SaveToLocalStorage;

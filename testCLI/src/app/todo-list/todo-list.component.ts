@@ -3,7 +3,8 @@ import {Todo} from "../common/todo.model";
 import {Subscription} from "rxjs";
 import {NavigationEnd, Router} from "@angular/router";
 import {Store} from "@ngrx/store";
-import {State} from "../reducers";
+import {State} from "../common/reducers";
+import {selectEditingTodo, selectTodoList} from "../common/selectors/todo-list.selector";
 
 @Component({
   selector: 'app-todo-list',
@@ -13,6 +14,7 @@ import {State} from "../reducers";
 export class TodoListComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
+  editingTodoSubscription: Subscription;
   todos: Todo[];
   editingTodo: Todo;
   allChecked: boolean;
@@ -21,12 +23,15 @@ export class TodoListComponent implements OnInit, OnDestroy {
               private store: Store<State>) {}
 
   ngOnInit() {
-    this.subscription = this.store.select((state) => state.todoList).subscribe((state) => {
-      this.todos = state.todoList;
-      this.editingTodo = state.editingTodo;
+    this.editingTodoSubscription = this.store.select(selectEditingTodo).subscribe((todo) => {
+      this.editingTodo = todo;
+    });
+    this.subscription = this.store.select(selectTodoList).subscribe((list) => {
+      this.todos = list;
       this.updateList();
     });
     this.router.events.subscribe((event) => {
+      //angular should take care of un-subscribing from this one
       if(event instanceof NavigationEnd) {
         this.updateList();
       }
@@ -49,6 +54,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.editingTodoSubscription.unsubscribe();
   }
 
   isEditingTodo(todo: Todo) {
