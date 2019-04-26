@@ -1,10 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from "../common/todo.model";
-import {Subscription} from "rxjs";
+import {Subject} from "rxjs";
 import {NavigationEnd, Router} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {State} from "../common/reducers";
 import {selectEditingTodo, selectTodoList} from "../common/selectors/todo-list.selector";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-todo-list',
@@ -13,8 +14,8 @@ import {selectEditingTodo, selectTodoList} from "../common/selectors/todo-list.s
 })
 export class TodoListComponent implements OnInit, OnDestroy {
 
-  subscription: Subscription;
-  editingTodoSubscription: Subscription;
+  private unsubscribe: Subject<void> = new Subject<void>();
+
   todos: Todo[];
   editingTodo: Todo;
   allChecked: boolean;
@@ -23,12 +24,16 @@ export class TodoListComponent implements OnInit, OnDestroy {
               private store: Store<State>) {}
 
   ngOnInit() {
-    this.editingTodoSubscription = this.store.select(selectEditingTodo).subscribe((todo) => {
-      this.editingTodo = todo;
+    this.store.select(selectEditingTodo)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((todo) => {
+        this.editingTodo = todo;
     });
-    this.subscription = this.store.select(selectTodoList).subscribe((list) => {
-      this.todos = list;
-      this.updateList();
+    this.store.select(selectTodoList)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((list) => {
+        this.todos = list;
+        this.updateList();
     });
     this.router.events.subscribe((event) => {
       //angular should take care of un-subscribing from this one
@@ -53,8 +58,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
-    this.editingTodoSubscription.unsubscribe();
+    //TODO: why next() and then complete()?
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   isEditingTodo(todo: Todo) {

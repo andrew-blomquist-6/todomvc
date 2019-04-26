@@ -50,10 +50,9 @@ export class UpdateEditingTodo implements Action {
 
 export class SaveToLocalStorage implements Action {
   readonly type = TodoListActionTypes.SaveToLocalStorage;
-
-  constructor(public storageID: string) {}
 }
 
+//TODO: is there a way to do this union any better?
 export type TodoListActions = LoadTodoList |
   AddTodo |
   UpdateTodo |

@@ -26,8 +26,9 @@ export class TodoComponent implements OnInit {
 
   ngOnInit() {
     this.originalTodo = _.cloneDeep(this.todo);
-    //TODO: get the form's initial value set
-    this.resetForm();
+    //TODO: why isn't this properly setting the form value?
+    this.form.value.title = this.todo.title;
+    this.editing = false;
   }
 
   toggleCompleted() {

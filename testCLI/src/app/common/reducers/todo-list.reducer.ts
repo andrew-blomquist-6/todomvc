@@ -30,8 +30,7 @@ export function todoListReducer(state = initialState, action: TodoListActions): 
         list: [...state.list, action.todo]
       };
     case TodoListActionTypes.UpdateTodo:
-      //TODO: should this be done differently? Pointers are sneaky... defeating the purpose of states?
-      let newList = state.list;
+         let newList = state.list.slice();
       newList[action.index] = action.todo;
       return {
         ...state,
@@ -55,7 +54,7 @@ export function todoListReducer(state = initialState, action: TodoListActions): 
         editingTodo: action.todo
       };
     case TodoListActionTypes.SaveToLocalStorage:
-      localStorage.setItem(action.storageID, JSON.stringify(state.list));
+      localStorage.setItem(state.storageKey, JSON.stringify(state.list));
       return state;
     default:
       return state;

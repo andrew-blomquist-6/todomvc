@@ -8,9 +8,6 @@ import {mapTo} from "rxjs/operators";
 @Injectable()
 export class TodoListEffects {
 
-  //TODO: figure out how to pull this from the state
-  private storageID = "todos-angular-ngrx";
-
   constructor(private actions$: Actions) {}
 
   @Effect()
@@ -22,6 +19,6 @@ export class TodoListEffects {
         TodoListActionTypes.RemoveTodo,
         TodoListActionTypes.RemoveCompleted
       ),
-      mapTo(new SaveToLocalStorage(this.storageID))
+      mapTo(new SaveToLocalStorage())
     );
 }
