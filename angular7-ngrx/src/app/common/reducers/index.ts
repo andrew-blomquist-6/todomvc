@@ -6,10 +6,10 @@ import {
   MetaReducer
 } from '@ngrx/store';
 import { environment } from '../../../environments/environment';
-import {todoListReducer, TodoListState} from "./todo-list.reducer";
+import {todoListReducer, TodoListState} from './todo-list.reducer';
 
 export interface State {
-  todoList: TodoListState
+  todoList: TodoListState;
 }
 
 export const reducers: ActionReducerMap<State> = {

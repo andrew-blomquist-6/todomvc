@@ -1,5 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {Todo} from "./todo.model";
+import {Todo} from './todo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +7,9 @@ import {Todo} from "./todo.model";
 export class TodoListService {
 
   public onChange: EventEmitter<any>;
-  //change this boolean if you don't want to use local storage
+  // change this boolean if you don't want to use local storage
   private useLocalStorage = true;
-  private storageID = "todos-angular";
+  private storageID = 'todos-angular';
   private todos: Todo[];
   private editingTodo: Todo;
 
@@ -65,8 +65,8 @@ export class TodoListService {
 
   countRemainingTodos() {
     let counter = 0;
-    for (let todo of this.todos) {
-      if(!todo.completed) {
+    for (const todo of this.todos) {
+      if (!todo.completed) {
         counter++;
       }
     }
@@ -89,7 +89,7 @@ export class TodoListService {
 
   private loadFromLocalStorage() {
     this.todos = JSON.parse(localStorage.getItem(this.storageID));
-    if(this.todos === null) {
+    if (this.todos === null) {
       this.todos = [];
     }
   }

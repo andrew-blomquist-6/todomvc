@@ -14,13 +14,13 @@ export class FocusDirective implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes.shouldFocus.currentValue) {
+    if (changes.shouldFocus.currentValue) {
       this.toggleFocus();
     }
   }
 
   toggleFocus() {
-    if(this.shouldFocus) {
+    if (this.shouldFocus) {
       this.el.nativeElement.focus();
     }
   }

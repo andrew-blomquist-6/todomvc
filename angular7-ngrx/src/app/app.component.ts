@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Todo} from "./common/todo.model";
-import {NgForm} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {NavigationEnd, Router} from "@angular/router";
-import {State} from "./common/reducers";
-import {Store} from "@ngrx/store";
-import {AddTodo, LoadTodoList, RemoveCompleted} from "./common/actions/todo-list.actions";
-import {selectTodoList} from "./common/selectors/todo-list.selector";
+import {Todo} from './common/todo.model';
+import {NgForm} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {NavigationEnd, Router} from '@angular/router';
+import {State} from './common/reducers';
+import {Store} from '@ngrx/store';
+import {AddTodo, LoadTodoList, RemoveCompleted} from './common/actions/todo-list.actions';
+import {selectTodoList} from './common/selectors/todo-list.selector';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.completedCount = this.todos.length - this.remainingCount;
     });
     this.router.events.subscribe((event) => {
-      if(event instanceof NavigationEnd) {
+      if (event instanceof NavigationEnd) {
         this.statusFilter = this.router.url.slice(1, this.router.url.length);
       }
     });
@@ -47,8 +47,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   countRemainingTodos() {
     let counter = 0;
-    for (let todo of this.todos) {
-      if(!todo.completed) {
+    for (const todo of this.todos) {
+      if (!todo.completed) {
         counter++;
       }
     }
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   submitTodo(form: NgForm) {
     const text = form.value.todoText;
-    if(text.trim().length) {
+    if (text.trim().length) {
       const newTodo = new Todo(false, text);
       this.store.dispatch(new AddTodo(newTodo));
       form.reset();

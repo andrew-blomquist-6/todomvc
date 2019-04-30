@@ -1,10 +1,10 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Todo} from "../common/todo.model";
-import {NgForm} from "@angular/forms";
+import {Todo} from '../common/todo.model';
+import {NgForm} from '@angular/forms';
 import * as _ from 'lodash';
-import {Store} from "@ngrx/store";
-import {State} from "../common/reducers";
-import {RemoveTodo, UpdateEditingTodo, UpdateTodo} from "../common/actions/todo-list.actions";
+import {Store} from '@ngrx/store';
+import {State} from '../common/reducers';
+import {RemoveTodo, UpdateEditingTodo, UpdateTodo} from '../common/actions/todo-list.actions';
 
 @Component({
   selector: 'app-todo',
@@ -26,7 +26,7 @@ export class TodoComponent implements OnInit {
 
   ngOnInit() {
     this.originalTodo = _.cloneDeep(this.todo);
-    //TODO: why isn't this properly setting the form value?
+    // TODO: why isn't this properly setting the form value?
     this.form.value.title = this.todo.title;
     this.editing = false;
   }
@@ -46,16 +46,15 @@ export class TodoComponent implements OnInit {
   }
 
   saveEdits(mode: string) {
-    //blur is triggered on a submit, this is here to prevent a double-submit
-    if(mode === 'blur' && this.savedEvent === 'submit') {
+    // blur is triggered on a submit, this is here to prevent a double-submit
+    if (mode === 'blur' && this.savedEvent === 'submit') {
       this.savedEvent = '';
       return;
-    }
-    else if(mode !== 'blur') {
-      //it was a submit
+    } else if (mode !== 'blur') {
+      // it was a submit
       this.savedEvent = mode;
       this.todo.title = this.form.value.title;
-      this.store.dispatch(new UpdateTodo(this.todo, this.index))
+      this.store.dispatch(new UpdateTodo(this.todo, this.index));
     }
     this.resetForm();
   }

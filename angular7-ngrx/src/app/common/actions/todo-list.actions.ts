@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import {Todo} from "../todo.model";
+import {Todo} from '../todo.model';
 
 export enum TodoListActionTypes {
   LoadTodoList = '[TodoList] Load Todo List',
@@ -52,7 +52,7 @@ export class SaveToLocalStorage implements Action {
   readonly type = TodoListActionTypes.SaveToLocalStorage;
 }
 
-//TODO: is there a way to do this union any better?
+// TODO: is there a way to do this union any better?
 export type TodoListActions = LoadTodoList |
   AddTodo |
   UpdateTodo |

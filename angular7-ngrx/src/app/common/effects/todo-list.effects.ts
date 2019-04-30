@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Observable} from "rxjs";
-import {Action} from "@ngrx/store";
-import {SaveToLocalStorage, TodoListActionTypes} from "../actions/todo-list.actions";
-import {mapTo} from "rxjs/operators";
+import {Observable} from 'rxjs';
+import {Action} from '@ngrx/store';
+import {SaveToLocalStorage, TodoListActionTypes} from '../actions/todo-list.actions';
+import {mapTo} from 'rxjs/operators';
 
 @Injectable()
 export class TodoListEffects {

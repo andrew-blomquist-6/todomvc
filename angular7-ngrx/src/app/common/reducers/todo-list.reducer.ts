@@ -1,10 +1,10 @@
-import {Todo} from "../todo.model";
-import {TodoListActions, TodoListActionTypes} from "../actions/todo-list.actions";
+import {Todo} from '../todo.model';
+import {TodoListActions, TodoListActionTypes} from '../actions/todo-list.actions';
 
 export interface TodoListState {
-  list: Array<Todo>,
-  editingTodo: Todo,
-  storageKey: string
+  list: Array<Todo>;
+  editingTodo: Todo;
+  storageKey: string;
 }
 
 export const initialState: TodoListState = {
@@ -17,7 +17,7 @@ export function todoListReducer(state = initialState, action: TodoListActions): 
   switch (action.type) {
     case TodoListActionTypes.LoadTodoList:
       let temp = JSON.parse(localStorage.getItem(state.storageKey));
-      if(temp === null) {
+      if (temp === null) {
         temp = [];
       }
       return {
@@ -30,7 +30,7 @@ export function todoListReducer(state = initialState, action: TodoListActions): 
         list: [...state.list, action.todo]
       };
     case TodoListActionTypes.UpdateTodo:
-         let newList = state.list.slice();
+      const newList = state.list.slice();
       newList[action.index] = action.todo;
       return {
         ...state,

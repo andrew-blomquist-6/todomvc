@@ -1,4 +1,4 @@
-import {State} from "../reducers";
+import {State} from '../reducers';
 
 export const selectTodoList = (state: State) => state.todoList.list;
 

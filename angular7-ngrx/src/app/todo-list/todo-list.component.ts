@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Todo} from "../common/todo.model";
-import {Subject} from "rxjs";
-import {NavigationEnd, Router} from "@angular/router";
-import {Store} from "@ngrx/store";
-import {State} from "../common/reducers";
-import {selectEditingTodo, selectTodoList} from "../common/selectors/todo-list.selector";
-import {takeUntil} from "rxjs/operators";
+import {Todo} from '../common/todo.model';
+import {Subject} from 'rxjs';
+import {NavigationEnd, Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {State} from '../common/reducers';
+import {selectEditingTodo, selectTodoList} from '../common/selectors/todo-list.selector';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-todo-list',
@@ -36,8 +36,8 @@ export class TodoListComponent implements OnInit, OnDestroy {
         this.updateList();
     });
     this.router.events.subscribe((event) => {
-      //angular should take care of un-subscribing from this one
-      if(event instanceof NavigationEnd) {
+      // angular should take care of un-subscribing from this one
+      if (event instanceof NavigationEnd) {
         this.updateList();
       }
     });
@@ -49,8 +49,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
       this.todos = this.todos.filter((todo) => {
         return !todo.completed;
       });
-    }
-    else if (this.router.url === '/completed') {
+    } else if (this.router.url === '/completed') {
       this.todos = this.todos.filter((todo) => {
         return todo.completed;
       });
@@ -58,7 +57,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //TODO: why next() and then complete()?
+    // TODO: why next() and then complete()?
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
