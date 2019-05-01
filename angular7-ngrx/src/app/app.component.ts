@@ -57,6 +57,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   submitTodo(form: NgForm) {
     const text = form.value.todoText;
+    if (text === null) {
+      return;
+    }
     if (text.trim().length) {
       const newTodo = new Todo(false, text);
       this.store.dispatch(new AddTodo(newTodo));

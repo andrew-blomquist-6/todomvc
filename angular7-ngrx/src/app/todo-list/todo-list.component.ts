@@ -6,6 +6,7 @@ import {Store} from '@ngrx/store';
 import {State} from '../common/reducers';
 import {selectEditingTodo, selectTodoList} from '../common/selectors/todo-list.selector';
 import {takeUntil} from 'rxjs/operators';
+import {UpdateTodo} from '../common/actions/todo-list.actions';
 
 @Component({
   selector: 'app-todo-list',
@@ -67,7 +68,10 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   markAll() {
-
+    this.todos.forEach((todo, index) => {
+      todo.completed = this.allChecked;
+      this.store.dispatch(new UpdateTodo(todo, index));
+    });
   }
 
 }
