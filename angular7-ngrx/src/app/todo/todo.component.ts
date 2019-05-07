@@ -25,9 +25,9 @@ export class TodoComponent implements OnInit {
   constructor(private store: Store<State>) { }
 
   ngOnInit() {
+    // TODO: cloneDeep is messing up the editingTodo comparison
+    //  (when deep cloned, they are no longer equal, even if their guts are the same)
     this.originalTodo = _.cloneDeep(this.todo);
-    // TODO: why isn't this properly setting the form value?
-    this.form.value.title = this.todo.title;
     this.editing = false;
   }
 
@@ -38,6 +38,7 @@ export class TodoComponent implements OnInit {
 
   editTodo() {
     this.editing = true;
+    this.form.controls.title.setValue(this.todo.title);
     this.store.dispatch(new UpdateEditingTodo(this.todo));
   }
 
@@ -49,23 +50,24 @@ export class TodoComponent implements OnInit {
     // blur is triggered on a submit, this is here to prevent a double-submit
     if (mode === 'blur' && this.savedEvent === 'submit') {
       this.savedEvent = '';
-      return;
     } else if (mode !== 'blur') {
       // it was a submit
       this.savedEvent = mode;
       this.todo.title = this.form.value.title;
+      this.originalTodo = _.cloneDeep(this.todo);
       this.store.dispatch(new UpdateTodo(this.todo, this.index));
     }
     this.resetForm();
   }
 
   revertEdits() {
-    this.todo = _.cloneDeep(this.originalTodo);
-    this.resetForm();
+    if (this.editing) {
+      this.todo = _.cloneDeep(this.originalTodo);
+      this.resetForm();
+    }
   }
 
   resetForm() {
-    this.form.value.title = this.todo.title;
     this.editing = false;
     this.store.dispatch(new UpdateEditingTodo(null));
   }

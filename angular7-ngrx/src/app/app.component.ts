@@ -45,6 +45,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  goToPage(page: string) {
+    this.router.navigateByUrl(page);
+  }
+
   countRemainingTodos() {
     let counter = 0;
     for (const todo of this.todos) {

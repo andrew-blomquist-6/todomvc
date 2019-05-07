@@ -5,7 +5,7 @@ import {NavigationEnd, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {State} from '../common/reducers';
 import {selectEditingTodo, selectTodoList} from '../common/selectors/todo-list.selector';
-import {takeUntil} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 import {UpdateTodo} from '../common/actions/todo-list.actions';
 
 @Component({
@@ -36,10 +36,15 @@ export class TodoListComponent implements OnInit, OnDestroy {
         this.todos = list;
         this.updateList();
     });
+    // angular should take care of un-subscribing from this one
     this.router.events.subscribe((event) => {
-      // angular should take care of un-subscribing from this one
       if (event instanceof NavigationEnd) {
-        this.updateList();
+        this.store.select(selectTodoList)
+          .pipe(take(1))
+          .subscribe((list) => {
+            this.todos = list;
+            this.updateList();
+          });
       }
     });
     this.allChecked = false;
