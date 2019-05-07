@@ -73,6 +73,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   markAll() {
+    // TODO: this doesn't work on the very first click
     this.todos.forEach((todo, index) => {
       todo.completed = this.allChecked;
       this.store.dispatch(new UpdateTodo(todo, index));
