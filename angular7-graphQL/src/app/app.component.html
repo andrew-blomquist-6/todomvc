@@ -1,0 +1,32 @@
+<section class="todoapp">
+  <header class="header">
+    <h1>todos</h1>
+    <form class="todo-form" (ngSubmit)="addTodo(f)" #f="ngForm">
+      <input class="new-todo" placeholder="What needs to be done?" name="todoText" ngModel [disabled]="saving" autofocus>
+    </form>
+  </header>
+  <section class="main" *ngIf="todos.length" ng-cloak>
+    <app-todo-list></app-todo-list>
+  </section>
+  <footer class="footer" *ngIf="todos.length" ng-cloak>
+					<span class="todo-count">
+            <strong>{{remainingCount}}</strong>
+            <span [ngPlural]="remainingCount">
+              <ng-template ngPluralCase="=1"> item left</ng-template>
+              <ng-template ngPluralCase="other"> items left</ng-template>
+            </span>
+					</span>
+    <ul class="filters">
+      <li>
+        <a [ngClass]="{selected: statusFilter == ''} " (click)="goToPage('/')">All</a>
+      </li>
+      <li>
+        <a [ngClass]="{selected: statusFilter == 'active'}" (click)="goToPage('/active')">Active</a>
+      </li>
+      <li>
+        <a [ngClass]="{selected: statusFilter == 'completed'}" (click)="goToPage('/completed')">Completed</a>
+      </li>
+    </ul>
+    <button class="clear-completed" (click)="clearCompletedTodos()" [hidden]="!completedCount">Clear completed</button>
+  </footer>
+</section>
