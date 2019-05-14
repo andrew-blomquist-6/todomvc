@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Todo} from "./common/todo.model";
-import {TodoListService} from "./common/todo-list.service";
-import {NgForm} from "@angular/forms";
-import {Subscription} from "rxjs";
-import {NavigationEnd, Router} from "@angular/router";
+import {Todo} from './common/todo.model';
+import {TodoListService} from './common/todo-list.service';
+import {NgForm} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +36,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  goToPage(page: string) {
+    this.router.navigateByUrl(page);
   }
 
   updateTodos() {

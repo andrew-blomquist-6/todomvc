@@ -52,7 +52,10 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   markAll() {
-
+    this.todos.forEach((todo, index) => {
+      todo.completed = this.allChecked;
+      this.todoListService.updateTodo(index, todo);
+    });
   }
 
 }
