@@ -8,7 +8,7 @@ class Todo {
 }
 
 //we're just storing the todos in memory
-const todoList = [];
+let todoList = [];
 
 const getUniqueID = () => {
   const id = Math.random().toFixed(5) * 100000;
@@ -33,16 +33,20 @@ const resolvers = {
     createTodo: (root, args) => {
       const todo = new Todo({id: getUniqueID(), title: args.title, completed: false});
       todoList.push(todo);
-      return todo;
+      return todoList;
     },
     updateTodo: (root, args) => {
-      const index = todoList.find(item => item.id === args.payload.id);
+      const index = todoList.findIndex(item => item.id === args.payload.id);
       const todo = new Todo(args.payload);
       todoList.splice(index, 1, todo);
-      return todo;
+      return todoList;
     },
     deleteTodo: (root, args) => {
-      todoList.filter(item => item.id !== args.id);
+      todoList = todoList.filter(item => {
+        // TODO: this is probably a type mismatch
+        return item.id !== args.id;
+      });
+      console.log(todoList);
       return todoList;
     }
   }

@@ -3,7 +3,7 @@ import {EventEmitter, Injectable, OnDestroy} from '@angular/core';
 import {Todo} from './todo.model';
 import {Apollo} from 'apollo-angular';
 import {Subscription} from 'rxjs';
-import {ADD_TODO, GET_TODO_LIST} from './graphql.constants';
+import {ADD_TODO, DELETE_TODO, GET_TODO_LIST, UPDATE_TODO} from './graphql.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -49,10 +49,9 @@ export class TodoListService implements OnDestroy {
         title: todo.title
       }
     }).subscribe(({data}) => {
-      console.log('got data', data);
-    }, (error) => {
-      console.log('there was an error sending the mutation', error);
-    });
+      this.todos = data.createTodo;
+      this.onChange.emit();
+    }, this.requestError);
   }
 
   setEditingTodo(todo: Todo) {
@@ -63,14 +62,30 @@ export class TodoListService implements OnDestroy {
     return this.editingTodo;
   }
 
-  updateTodo(index: number, todo: Todo) {
-    this.todos[index] = todo;
-    this.onChange.emit();
+  updateTodo(todo: Todo) {
+    this.apollo.mutate({
+      mutation: UPDATE_TODO,
+      variables: {
+        id: todo.id,
+        title: todo.title,
+        completed: todo.completed
+      }
+    }).subscribe(({data}) => {
+      this.todos = data.editTodo;
+      this.onChange.emit();
+    }, this.requestError);
   }
 
-  deleteTodo(index: number) {
-    this.todos.splice(index, 1);
-    this.onChange.emit();
+  deleteTodo(todo: Todo) {
+    this.apollo.mutate({
+      mutation: DELETE_TODO,
+      variables: {
+        id: todo.id
+      }
+    }).subscribe(({data}) => {
+      this.todos = data.deleteTodo;
+      this.onChange.emit();
+    }, this.requestError);
   }
 
   countRemainingTodos() {
@@ -88,5 +103,9 @@ export class TodoListService implements OnDestroy {
       return !todo.completed;
     });
     this.onChange.emit();
+  }
+
+  requestError = (error) => {
+    console.log('there was an error sending the mutation', error);
   }
 }
