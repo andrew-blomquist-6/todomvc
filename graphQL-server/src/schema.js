@@ -1,8 +1,9 @@
 
-import {buildSchema} from 'graphql';
+import {gql} from 'apollo-server';
 
-const schema = buildSchema(`
+const typeDefs = gql`
   type Todo {
+    id: ID
     title: String
     completed: Boolean
   }
@@ -11,16 +12,17 @@ const schema = buildSchema(`
     getTodoList: [Todo]
   }
   
-  input TodoInput {
+  input updatePayload {
+    id: ID!
     title: String
     completed: Boolean
   }
   
   type Mutation {
-    createTodo(payload: TodoInput!): Todo
-    updateTodo(index: ID!, payload: TodoInput!): Todo
-    deleteTodo(index: ID!): [Todo]
+    createTodo(title: String!): Todo
+    updateTodo(payload: updatePayload!): Todo
+    deleteTodo(id: ID!): [Todo]
   }
-`);
+`;
 
-export default schema;
+export default typeDefs;
