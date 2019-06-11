@@ -11,7 +11,7 @@ class Todo {
 let todoList = [];
 
 const getUniqueID = () => {
-  const id = Math.floor(Math.random().toFixed(5) * 100000);
+  const id = Math.floor(Math.random().toFixed(5) * 100000).toString();
   const index = todoList.find(item => item.id === id);
   if(index) {
     return getUniqueID();
@@ -36,13 +36,13 @@ const resolvers = {
       return todoList;
     },
     updateTodo: (root, args) => {
-      const index = todoList.findIndex(item => item.id === parseInt(args.payload.id));
+      const index = todoList.findIndex(item => item.id === args.payload.id);
       const todo = new Todo(args.payload);
       todoList.splice(index, 1, todo);
       return todoList;
     },
     deleteTodo: (root, args) => {
-      todoList = todoList.filter(item => item.id !== parseInt(args.id));
+      todoList = todoList.filter(item => item.id !== args.id);
       return todoList;
     }
   }

@@ -71,7 +71,7 @@ export class TodoListService implements OnDestroy {
         completed: todo.completed
       }
     }).subscribe(({data}) => {
-      this.todos = data.editTodo;
+      this.todos = data.updateTodo;
       this.onChange.emit();
     }, this.requestError);
   }
@@ -99,10 +99,11 @@ export class TodoListService implements OnDestroy {
   }
 
   clearCompleted() {
-    this.todos = this.todos.filter((todo) => {
-      return !todo.completed;
+    this.todos.forEach(todo => {
+      if (todo.completed) {
+        this.deleteTodo(todo);
+      }
     });
-    this.onChange.emit();
   }
 
   requestError = (error) => {
