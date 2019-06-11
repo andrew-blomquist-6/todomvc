@@ -1,8 +1,9 @@
+
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Todo} from "../common/todo.model";
-import {TodoListService} from "../common/todo-list.service";
-import {Subscription} from "rxjs";
-import {NavigationEnd, Router} from "@angular/router";
+import {Todo} from '../common/todo.model';
+import {TodoListService} from '../common/todo-list.service';
+import {Subscription} from 'rxjs';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
   selector: 'app-todo-list',
@@ -22,10 +23,11 @@ export class TodoListComponent implements OnInit, OnDestroy {
       this.updateList();
     });
     this.router.events.subscribe((event) => {
-      if(event instanceof NavigationEnd) {
+      if (event instanceof NavigationEnd) {
         this.updateList();
       }
     });
+    this.updateList();
     this.allChecked = false;
   }
 
@@ -35,8 +37,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
       this.todos = this.todos.filter((todo) => {
         return !todo.completed;
       });
-    }
-    else if (this.router.url === '/completed') {
+    } else if (this.router.url === '/completed') {
       this.todos = this.todos.filter((todo) => {
         return todo.completed;
       });
@@ -44,7 +45,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   isEditingTodo(todo: Todo) {
@@ -52,9 +55,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   markAll() {
-    this.todos.forEach((todo, index) => {
+    this.todos.forEach(todo => {
       todo.completed = this.allChecked;
-      this.todoListService.updateTodo(index, todo);
+      this.todoListService.updateTodo(todo);
     });
   }
 

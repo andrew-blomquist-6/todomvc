@@ -1,26 +1,37 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {Todo} from "./todo.model";
+
+import {EventEmitter, Injectable, OnDestroy} from '@angular/core';
+import {Todo} from './todo.model';
+import {Apollo} from 'apollo-angular';
+import {Subscription} from 'rxjs';
+import {ADD_TODO, DELETE_TODO, GET_TODO_LIST, UPDATE_TODO} from './graphql.constants';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TodoListService {
+export class TodoListService implements OnDestroy {
 
   public onChange: EventEmitter<any>;
-  //change this boolean if you don't want to use local storage
-  private useLocalStorage = true;
-  private storageID = "todos-angular";
   private todos: Todo[];
   private editingTodo: Todo;
+  private querySubscription: Subscription;
 
-  constructor() {
-    if (this.useLocalStorage) {
-      this.loadFromLocalStorage();
-    } else {
-      this.todos = [];
-    }
+  constructor(private apollo: Apollo) {
+    this.todos = [];
     this.onChange = new EventEmitter<any>();
     this.editingTodo = null;
+
+    this.querySubscription = this.apollo.watchQuery<any>({
+      query: GET_TODO_LIST
+    }).valueChanges.subscribe(({data}) => {
+      this.todos = data.getTodoList;
+      this.onChange.emit();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe();
+    }
   }
 
   getTodos() {
@@ -32,11 +43,15 @@ export class TodoListService {
   }
 
   addTodo(todo: Todo) {
-    this.todos.push(todo);
-    if (this.useLocalStorage) {
-      this.saveToLocalStorage();
-    }
-    this.onChange.emit();
+    this.apollo.mutate({
+      mutation: ADD_TODO,
+      variables: {
+        title: todo.title
+      }
+    }).subscribe(({data}) => {
+      this.todos = data.createTodo;
+      this.onChange.emit();
+    }, this.requestError);
   }
 
   setEditingTodo(todo: Todo) {
@@ -47,26 +62,36 @@ export class TodoListService {
     return this.editingTodo;
   }
 
-  updateTodo(index: number, todo: Todo) {
-    this.todos[index] = todo;
-    if (this.useLocalStorage) {
-      this.saveToLocalStorage();
-    }
-    this.onChange.emit();
+  updateTodo(todo: Todo) {
+    this.apollo.mutate({
+      mutation: UPDATE_TODO,
+      variables: {
+        id: todo.id,
+        title: todo.title,
+        completed: todo.completed
+      }
+    }).subscribe(({data}) => {
+      this.todos = data.updateTodo;
+      this.onChange.emit();
+    }, this.requestError);
   }
 
-  deleteTodo(index: number) {
-    this.todos.splice(index, 1);
-    if (this.useLocalStorage) {
-      this.saveToLocalStorage();
-    }
-    this.onChange.emit();
+  deleteTodo(todo: Todo) {
+    this.apollo.mutate({
+      mutation: DELETE_TODO,
+      variables: {
+        id: todo.id
+      }
+    }).subscribe(({data}) => {
+      this.todos = data.deleteTodo;
+      this.onChange.emit();
+    }, this.requestError);
   }
 
   countRemainingTodos() {
     let counter = 0;
-    for (let todo of this.todos) {
-      if(!todo.completed) {
+    for (const todo of this.todos) {
+      if (!todo.completed) {
         counter++;
       }
     }
@@ -74,23 +99,14 @@ export class TodoListService {
   }
 
   clearCompleted() {
-    this.todos = this.todos.filter((todo) => {
-      return !todo.completed;
+    this.todos.forEach(todo => {
+      if (todo.completed) {
+        this.deleteTodo(todo);
+      }
     });
-    if (this.useLocalStorage) {
-      this.saveToLocalStorage();
-    }
-    this.onChange.emit();
   }
 
-  private saveToLocalStorage() {
-    localStorage.setItem(this.storageID, JSON.stringify(this.todos));
-  }
-
-  private loadFromLocalStorage() {
-    this.todos = JSON.parse(localStorage.getItem(this.storageID));
-    if(this.todos === null) {
-      this.todos = [];
-    }
+  requestError = (error) => {
+    console.log('there was an error sending the mutation', error);
   }
 }

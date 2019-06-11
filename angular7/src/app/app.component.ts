@@ -26,7 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.updateTodos();
     });
     this.router.events.subscribe((event) => {
-      if(event instanceof NavigationEnd) {
+      if (event instanceof NavigationEnd) {
         this.statusFilter = this.router.url.slice(1, this.router.url.length);
       }
     });
@@ -35,7 +35,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   goToPage(page: string) {
@@ -50,8 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   addTodo(form: NgForm) {
     const text = form.value.todoText;
-    if(text.trim().length) {
-      this.todoListService.addTodo(new Todo(false, text));
+    if (text.trim().length) {
+      this.todoListService.addTodo(new Todo(false, text, 0));
       form.reset();
     }
   }
