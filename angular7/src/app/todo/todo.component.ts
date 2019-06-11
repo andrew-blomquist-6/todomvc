@@ -16,7 +16,7 @@ export class TodoComponent implements OnInit {
   @Input() todo: Todo;
   @Input() index: number;
 
-  @ViewChild('f') form: NgForm;
+  @ViewChild('f', { static: true }) form: NgForm;
 
   originalTodo: Todo;
   editing: boolean;
