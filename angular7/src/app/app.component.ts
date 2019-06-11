@@ -1,9 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from './common/todo.model';
-import {TodoListService} from './common/todo-list.service';
 import {NgForm} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
+import {State} from './common/reducers';
+import {Store} from '@ngrx/store';
+import {AddTodo, LoadTodoList, RemoveCompleted} from './common/actions/todo-list.actions';
+import {selectTodoList} from './common/selectors/todo-list.selector';
 
 @Component({
   selector: 'app-root',
@@ -20,17 +23,21 @@ export class AppComponent implements OnInit, OnDestroy {
   completedCount: number;
   statusFilter: string;
 
-  constructor(private todoListService: TodoListService, private router: Router) {}
+  constructor(private router: Router,
+              private store: Store<State>) {}
+
   ngOnInit() {
-    this.subscription = this.todoListService.onChange.subscribe(() => {
-      this.updateTodos();
+    this.subscription = this.store.select(selectTodoList).subscribe((list) => {
+      this.todos = list;
+      this.remainingCount = this.countRemainingTodos();
+      this.completedCount = this.todos.length - this.remainingCount;
     });
     this.router.events.subscribe((event) => {
-      if(event instanceof NavigationEnd) {
+      if (event instanceof NavigationEnd) {
         this.statusFilter = this.router.url.slice(1, this.router.url.length);
       }
     });
-    this.updateTodos();
+    this.store.dispatch(new LoadTodoList());
     this.saving = false;
   }
 
@@ -42,22 +49,30 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl(page);
   }
 
-  updateTodos() {
-    this.todos = this.todoListService.getTodos();
-    this.remainingCount = this.todoListService.countRemainingTodos();
-    this.completedCount = this.todos.length - this.remainingCount;
+  countRemainingTodos() {
+    let counter = 0;
+    for (const todo of this.todos) {
+      if (!todo.completed) {
+        counter++;
+      }
+    }
+    return counter;
   }
 
-  addTodo(form: NgForm) {
+  submitTodo(form: NgForm) {
     const text = form.value.todoText;
-    if(text.trim().length) {
-      this.todoListService.addTodo(new Todo(false, text));
+    if (text === null) {
+      return;
+    }
+    if (text.trim().length) {
+      const newTodo = new Todo(false, text);
+      this.store.dispatch(new AddTodo(newTodo));
       form.reset();
     }
   }
 
   clearCompletedTodos() {
-    this.todoListService.clearCompleted();
+    this.store.dispatch(new RemoveCompleted());
   }
 
 }

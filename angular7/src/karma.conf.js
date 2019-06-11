@@ -16,11 +16,7 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-<<<<<<< HEAD:angular7-ngrx/src/karma.conf.js
-      dir: require('path').join(__dirname, '../coverage/angular7-ngrx'),
-=======
       dir: require('path').join(__dirname, '../coverage/angular7'),
->>>>>>> master:angular7/src/karma.conf.js
       reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true
     },

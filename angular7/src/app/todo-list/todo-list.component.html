@@ -1,13 +1,9 @@
-<<<<<<< HEAD:angular7-ngrx/src/app/todo-list/todo-list.component.html
-<input id="toggle-all" class="toggle-all" type="checkbox" [(ngModel)]="allChecked" ngModelOptions="{standalone: true}" (click)="markAll()">
-=======
 <input id="toggle-all"
        class="toggle-all"
        type="checkbox"
        [(ngModel)]="allChecked"
        [ngModelOptions]="{standalone: true}"
        (click)="markAll()">
->>>>>>> master:angular7/src/app/todo-list/todo-list.component.html
 <label for="toggle-all">Mark all as complete</label>
 <ul class="todo-list">
   <li *ngFor="let todo of todos; let i = index;"

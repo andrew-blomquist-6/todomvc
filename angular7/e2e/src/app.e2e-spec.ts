@@ -10,11 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-<<<<<<< HEAD:angular7-ngrx/e2e/src/app.e2e-spec.ts
-    expect(page.getTitleText()).toEqual('Welcome to angular7-ngrx!');
-=======
     expect(page.getTitleText()).toEqual('Welcome to angular7!');
->>>>>>> master:angular7/e2e/src/app.e2e-spec.ts
   });
 
   afterEach(async () => {
