@@ -2,8 +2,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from '../common/todo.model';
 import {TodoListService} from '../common/todo-list.service';
-import {Subscription} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
+import {Subject} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {State} from '../common/reducers';
+import {selectEditingTodo, selectTodoList} from '../common/selectors/todo-list.selector';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-todo-list',
@@ -12,19 +16,30 @@ import {NavigationEnd, Router} from '@angular/router';
 })
 export class TodoListComponent implements OnInit, OnDestroy {
 
-  subscription: Subscription;
+  private unsubscribe: Subject<void> = new Subject<void>();
+
   todos: Todo[];
+  editingTodo: Todo;
   allChecked: boolean;
 
-  constructor(private todoListService: TodoListService, private router: Router) { }
+  constructor(private todoListService: TodoListService,
+              private router: Router,
+              private store: Store<State>) {}
 
   ngOnInit() {
-    this.subscription = this.todoListService.onChange.subscribe(() => {
-      this.updateList();
+    this.store.select(selectEditingTodo)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((todo) => {
+        this.editingTodo = todo;
     });
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.updateList();
+        this.store.select(selectTodoList)
+          .pipe(takeUntil(this.unsubscribe))
+          .subscribe((list) => {
+            this.todos = list;
+            this.updateList();
+          });
       }
     });
     this.updateList();
@@ -32,7 +47,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   updateList() {
-    this.todos = this.todoListService.getTodos();
     if (this.router.url === '/active') {
       this.todos = this.todos.filter((todo) => {
         return !todo.completed;
@@ -45,20 +59,25 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   isEditingTodo(todo: Todo) {
-    return todo === this.todoListService.getEditingTodo();
+    return todo === this.editingTodo;
   }
 
   markAll() {
+    // TODO: this doesn't work on the very first click
     this.todos.forEach(todo => {
       todo.completed = this.allChecked;
       this.todoListService.updateTodo(todo);
     });
+
+    // this.todos.forEach((todo, index) => {
+    //   todo.completed = this.allChecked;
+    //   this.store.dispatch(new UpdateTodo(todo, index));
+    // });
   }
 
 }

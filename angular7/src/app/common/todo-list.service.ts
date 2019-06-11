@@ -4,30 +4,16 @@ import {Todo} from './todo.model';
 import {Apollo} from 'apollo-angular';
 import {Subscription} from 'rxjs';
 import {ADD_TODO, DELETE_TODO, GET_TODO_LIST, UPDATE_TODO} from './graphql.constants';
-import {take} from "rxjs/operators";
+import {take} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoListService implements OnDestroy {
 
-  public onChange: EventEmitter<any>;
-  private todos: Todo[];
-  private editingTodo: Todo;
   private querySubscription: Subscription;
 
-  constructor(private apollo: Apollo) {
-    this.todos = [];
-    this.onChange = new EventEmitter<any>();
-    this.editingTodo = null;
-
-    this.querySubscription = this.apollo.watchQuery<any>({
-      query: GET_TODO_LIST
-    }).valueChanges.subscribe(({data}) => {
-      this.todos = data.getTodoList;
-      this.onChange.emit();
-    });
-  }
+  constructor(private apollo: Apollo) { }
 
   ngOnDestroy() {
     if (this.querySubscription) {
@@ -35,12 +21,12 @@ export class TodoListService implements OnDestroy {
     }
   }
 
-  getTodos() {
-    return this.todos.slice();
-  }
-
-  getTodo(index: number) {
-    return this.todos[index];
+  initList() {
+    this.querySubscription = this.apollo.watchQuery<any>({
+      query: GET_TODO_LIST
+    }).valueChanges.subscribe(({data}) => {
+      // TODO: update the redux store
+    });
   }
 
   addTodo(todo: Todo) {
@@ -51,17 +37,8 @@ export class TodoListService implements OnDestroy {
       }
     }).pipe(take(1))
       .subscribe(({data}) => {
-      this.todos = data.createTodo;
-      this.onChange.emit();
+        // TODO: update the redux store
     }, this.requestError);
-  }
-
-  setEditingTodo(todo: Todo) {
-    this.editingTodo = todo;
-  }
-
-  getEditingTodo() {
-    return this.editingTodo;
   }
 
   updateTodo(todo: Todo) {
@@ -74,8 +51,7 @@ export class TodoListService implements OnDestroy {
       }
     }).pipe(take(1))
       .subscribe(({data}) => {
-      this.todos = data.updateTodo;
-      this.onChange.emit();
+        // TODO: update the redux store
     }, this.requestError);
   }
 
@@ -87,27 +63,8 @@ export class TodoListService implements OnDestroy {
       }
     }).pipe(take(1))
       .subscribe(({data}) => {
-      this.todos = data.deleteTodo;
-      this.onChange.emit();
+        // TODO: update the redux store
     }, this.requestError);
-  }
-
-  countRemainingTodos() {
-    let counter = 0;
-    for (const todo of this.todos) {
-      if (!todo.completed) {
-        counter++;
-      }
-    }
-    return counter;
-  }
-
-  clearCompleted() {
-    this.todos.forEach(todo => {
-      if (todo.completed) {
-        this.deleteTodo(todo);
-      }
-    });
   }
 
   requestError = (error) => {

@@ -1,7 +1,7 @@
 <section class="todoapp">
   <header class="header">
     <h1>todos</h1>
-    <form class="todo-form" (ngSubmit)="addTodo(f)" #f="ngForm">
+    <form class="todo-form" (ngSubmit)="submitTodo(f)" #f="ngForm">
       <input class="new-todo" placeholder="What needs to be done?" name="todoText" ngModel [disabled]="saving" autofocus>
     </form>
   </header>

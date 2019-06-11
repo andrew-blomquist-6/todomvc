@@ -12,6 +12,12 @@ import {HttpClientModule} from '@angular/common/http';
 import {HttpLink, HttpLinkModule} from 'apollo-angular-link-http';
 import {Apollo, ApolloModule} from 'apollo-angular';
 import {InMemoryCache} from 'apollo-cache-inmemory';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './common/reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import {EffectsModule} from '@ngrx/effects';
+import {TodoListEffects} from './common/effects/todo-list.effects';
 
 @NgModule({
   declarations: [
@@ -27,7 +33,10 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
     FormsModule,
     HttpClientModule,
     HttpLinkModule,
-    ApolloModule
+    ApolloModule,
+    StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot([TodoListEffects]),
+    !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [],
   bootstrap: [AppComponent]
