@@ -11,7 +11,7 @@ class Todo {
 let todoList = [];
 
 const getUniqueID = () => {
-  const id = Math.random().toFixed(5) * 100000;
+  const id = Math.floor(Math.random().toFixed(5) * 100000);
   const index = todoList.find(item => item.id === id);
   if(index) {
     return getUniqueID();
@@ -43,10 +43,8 @@ const resolvers = {
     },
     deleteTodo: (root, args) => {
       todoList = todoList.filter(item => {
-        // TODO: this is probably a type mismatch
-        return item.id !== args.id;
+        return item.id !== parseInt(args.id);
       });
-      console.log(todoList);
       return todoList;
     }
   }
