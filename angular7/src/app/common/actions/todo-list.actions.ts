@@ -8,16 +8,12 @@ export enum TodoListActionTypes {
   RemoveTodo = '[TodoList] Remove Todo',
   RemoveCompleted = '[TodoList] Remove Completed',
   UpdateEditingTodo = '[TodoList] Update Editing Todo',
-  SaveToLocalStorage = '[TodoList] Save to Local Storage'
 }
-
-/*
-  TODO: lookup the merits of using a payload object vs. what we're doing now
-  aka: public payload: {todo: Todo, index: number}
- */
 
 export class LoadTodoList implements Action {
   readonly type = TodoListActionTypes.LoadTodoList;
+
+  constructor(public list: Todo[]) {}
 }
 
 export class AddTodo implements Action {
@@ -48,15 +44,9 @@ export class UpdateEditingTodo implements Action {
   constructor(public todo: Todo) {}
 }
 
-export class SaveToLocalStorage implements Action {
-  readonly type = TodoListActionTypes.SaveToLocalStorage;
-}
-
-// TODO: is there a way to do this union any better?
 export type TodoListActions = LoadTodoList |
   AddTodo |
   UpdateTodo |
   RemoveTodo |
   RemoveCompleted |
-  UpdateEditingTodo |
-  SaveToLocalStorage;
+  UpdateEditingTodo;

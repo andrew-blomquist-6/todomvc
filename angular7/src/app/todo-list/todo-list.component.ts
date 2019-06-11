@@ -1,4 +1,3 @@
-
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from '../common/todo.model';
 import {TodoListService} from '../common/todo-list.service';
@@ -32,15 +31,18 @@ export class TodoListComponent implements OnInit, OnDestroy {
       .subscribe((todo) => {
         this.editingTodo = todo;
     });
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.store.select(selectTodoList)
-          .pipe(takeUntil(this.unsubscribe))
-          .subscribe((list) => {
-            this.todos = list;
-            this.updateList();
-          });
-      }
+    this.store.select(selectTodoList)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((list) => {
+        this.todos = list;
+        this.updateList();
+    });
+    this.router.events
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((event) => {
+        if (event instanceof NavigationEnd) {
+          this.updateList();
+        }
     });
     this.updateList();
     this.allChecked = false;
@@ -73,11 +75,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
       todo.completed = this.allChecked;
       this.todoListService.updateTodo(todo);
     });
-
-    // this.todos.forEach((todo, index) => {
-    //   todo.completed = this.allChecked;
-    //   this.store.dispatch(new UpdateTodo(todo, index));
-    // });
   }
 
 }

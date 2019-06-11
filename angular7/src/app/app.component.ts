@@ -5,7 +5,6 @@ import {Subject, Subscription} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
 import {State} from './common/reducers';
 import {Store} from '@ngrx/store';
-import {AddTodo, LoadTodoList, RemoveCompleted} from './common/actions/todo-list.actions';
 import {selectTodoList} from './common/selectors/todo-list.selector';
 import {takeUntil} from 'rxjs/operators';
 import {TodoListService} from './common/todo-list.service';
@@ -19,7 +18,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
   todos: Todo[];
-  newTodo: string;
   saving: boolean;
   remainingCount: number;
   completedCount: number;
@@ -47,7 +45,6 @@ export class AppComponent implements OnInit, OnDestroy {
           this.statusFilter = this.router.url.slice(1, this.router.url.length);
         }
     });
-    this.store.dispatch(new LoadTodoList());
     this.saving = false;
   }
 
@@ -77,15 +74,16 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     if (text.trim().length) {
       this.todoListService.addTodo(new Todo(false, text, 0));
-
-      // const newTodo = new Todo(false, text);
-      // this.store.dispatch(new AddTodo(newTodo));
       form.reset();
     }
   }
 
   clearCompletedTodos() {
-    this.store.dispatch(new RemoveCompleted());
+    this.todos.forEach(todo => {
+      if (todo.completed) {
+        this.todoListService.deleteTodo(todo);
+      }
+    });
   }
 
 }

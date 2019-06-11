@@ -27,22 +27,15 @@ export function todoListReducer(state = initialState, action: TodoListActions): 
       return applyRemoveCompleted(state, action);
     case TodoListActionTypes.UpdateEditingTodo:
       return applyUpdateEditingTodo(state, action);
-    case TodoListActionTypes.SaveToLocalStorage:
-      return applySaveToLocalStorage(state, action);
     default:
       return state;
   }
 }
 
-// TODO: is it appropriate to have a reducer interact with data persistence?
 function applyLoadTodoList(state, action) {
-  // let temp = JSON.parse(localStorage.getItem(state.storageKey));
-  // if (temp === null) {
-  //   temp = [];
-  // }
   return {
     ...state,
-    list: []
+    list: action.list
   };
 }
 
@@ -84,10 +77,4 @@ function applyUpdateEditingTodo(state, action) {
     ...state,
     editingTodo: action.todo
   };
-}
-
-// TODO: is it appropriate to have a reducer interact with data persistence?
-function applySaveToLocalStorage(state, action) {
-  localStorage.setItem(state.storageKey, JSON.stringify(state.list));
-  return state;
 }

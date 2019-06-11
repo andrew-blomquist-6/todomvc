@@ -36,8 +36,6 @@ export class TodoComponent implements OnInit {
   toggleCompleted() {
     this.todo.completed = !this.todo.completed;
     this.todoListService.updateTodo(this.todo);
-
-    // this.store.dispatch(new UpdateTodo(this.todo, this.index));
   }
 
   editTodo() {
@@ -48,8 +46,6 @@ export class TodoComponent implements OnInit {
 
   removeTodo() {
     this.todoListService.deleteTodo(this.todo);
-
-    // this.store.dispatch(new RemoveTodo(this.index));
   }
 
   saveEdits(mode: string) {
@@ -62,9 +58,6 @@ export class TodoComponent implements OnInit {
       this.savedEvent = mode;
       this.todo.title = this.form.value.title;
       this.todoListService.updateTodo(this.todo);
-
-      // this.originalTodo = _.cloneDeep(this.todo);
-      // this.store.dispatch(new UpdateTodo(this.todo, this.index));
     }
     this.resetForm();
   }
@@ -80,5 +73,4 @@ export class TodoComponent implements OnInit {
     this.editing = false;
     this.store.dispatch(new UpdateEditingTodo(null));
   }
-
 }

@@ -1,10 +1,12 @@
-
-import {EventEmitter, Injectable, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Todo} from './todo.model';
 import {Apollo} from 'apollo-angular';
 import {Subscription} from 'rxjs';
 import {ADD_TODO, DELETE_TODO, GET_TODO_LIST, UPDATE_TODO} from './graphql.constants';
 import {take} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {State} from './reducers';
+import {LoadTodoList} from './actions/todo-list.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,8 @@ export class TodoListService implements OnDestroy {
 
   private querySubscription: Subscription;
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo,
+              private store: Store<State>) { }
 
   ngOnDestroy() {
     if (this.querySubscription) {
@@ -24,8 +27,11 @@ export class TodoListService implements OnDestroy {
   initList() {
     this.querySubscription = this.apollo.watchQuery<any>({
       query: GET_TODO_LIST
-    }).valueChanges.subscribe(({data}) => {
-      // TODO: update the redux store
+    })
+      .valueChanges
+      .pipe(take(1))
+      .subscribe(({data}) => {
+        this.store.dispatch(new LoadTodoList(data.getTodoList));
     });
   }
 
@@ -37,7 +43,7 @@ export class TodoListService implements OnDestroy {
       }
     }).pipe(take(1))
       .subscribe(({data}) => {
-        // TODO: update the redux store
+        this.store.dispatch(new LoadTodoList(data.addTodo));
     }, this.requestError);
   }
 
@@ -51,7 +57,7 @@ export class TodoListService implements OnDestroy {
       }
     }).pipe(take(1))
       .subscribe(({data}) => {
-        // TODO: update the redux store
+        this.store.dispatch(new LoadTodoList(data.updateTodo));
     }, this.requestError);
   }
 
@@ -63,7 +69,7 @@ export class TodoListService implements OnDestroy {
       }
     }).pipe(take(1))
       .subscribe(({data}) => {
-        // TODO: update the redux store
+        this.store.dispatch(new LoadTodoList(data.deleteTodo));
     }, this.requestError);
   }
 
