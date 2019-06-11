@@ -4,6 +4,7 @@ import {Todo} from './todo.model';
 import {Apollo} from 'apollo-angular';
 import {Subscription} from 'rxjs';
 import {ADD_TODO, DELETE_TODO, GET_TODO_LIST, UPDATE_TODO} from './graphql.constants';
+import {take} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +49,8 @@ export class TodoListService implements OnDestroy {
       variables: {
         title: todo.title
       }
-    }).subscribe(({data}) => {
+    }).pipe(take(1))
+      .subscribe(({data}) => {
       this.todos = data.createTodo;
       this.onChange.emit();
     }, this.requestError);
@@ -70,7 +72,8 @@ export class TodoListService implements OnDestroy {
         title: todo.title,
         completed: todo.completed
       }
-    }).subscribe(({data}) => {
+    }).pipe(take(1))
+      .subscribe(({data}) => {
       this.todos = data.updateTodo;
       this.onChange.emit();
     }, this.requestError);
@@ -82,7 +85,8 @@ export class TodoListService implements OnDestroy {
       variables: {
         id: todo.id
       }
-    }).subscribe(({data}) => {
+    }).pipe(take(1))
+      .subscribe(({data}) => {
       this.todos = data.deleteTodo;
       this.onChange.emit();
     }, this.requestError);
