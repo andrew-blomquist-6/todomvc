@@ -2,8 +2,11 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
+  "cli": {
+    "packageManager": "yarn"
+  },
   "projects": {
-    "testCLI": {
+    "angular7": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +16,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/testCLI",
+            "outputPath": "dist/angular7",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -60,18 +63,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "testCLI:build"
+            "browserTarget": "angular7:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "testCLI:build:production"
+              "browserTarget": "angular7:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "testCLI:build"
+            "browserTarget": "angular7:build"
           }
         },
         "test": {
@@ -105,7 +108,7 @@
         }
       }
     },
-    "testCLI-e2e": {
+    "angular7-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -114,11 +117,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "testCLI:serve"
+            "devServerTarget": "angular7:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "testCLI:serve:production"
+              "devServerTarget": "angular7:serve:production"
             }
           }
         },
@@ -134,5 +137,5 @@
       }
     }
   },
-  "defaultProject": "testCLI"
+  "defaultProject": "angular7"
 }
