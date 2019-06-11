@@ -36,15 +36,13 @@ const resolvers = {
       return todoList;
     },
     updateTodo: (root, args) => {
-      const index = todoList.findIndex(item => item.id === args.payload.id);
+      const index = todoList.findIndex(item => item.id === parseInt(args.payload.id));
       const todo = new Todo(args.payload);
       todoList.splice(index, 1, todo);
       return todoList;
     },
     deleteTodo: (root, args) => {
-      todoList = todoList.filter(item => {
-        return item.id !== parseInt(args.id);
-      });
+      todoList = todoList.filter(item => item.id !== parseInt(args.id));
       return todoList;
     }
   }
