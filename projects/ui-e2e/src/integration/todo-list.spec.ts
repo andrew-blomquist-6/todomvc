@@ -2,6 +2,14 @@
 
 import {addTodo, removeTodo, toggleTodo, verifyTodoList} from '../support/app.po';
 
+const todos = [
+  'here is the first todo',
+  'the second todo in the list',
+  'the third todo in the list',
+  'number 4',
+  'and then there were five'
+];
+
 describe('The TODO List', () => {
 
   before(() => {
@@ -9,52 +17,79 @@ describe('The TODO List', () => {
   });
 
   it('should let you add a todo', () => {
-    addTodo('here is the first todo');
+    addTodo(todos[0]);
     verifyTodoList();
   });
 
   it('should add a new todo to the end of the list', () => {
-    addTodo('the second todo in the list');
+    addTodo(todos[1]);
     verifyTodoList();
   });
 
   it( 'should preserve the order todos were added to the list', () => {
-    addTodo('the third todo in the list');
-    addTodo('number 4');
-    addTodo('and then there were five');
+    addTodo(todos[2]);
+    addTodo(todos[3]);
+    addTodo(todos[4]);
     verifyTodoList();
   });
 
-  it('should remove the todo when you click on its remove button', () => {
-    removeTodo('the second todo in the list');
-    verifyTodoList();
+  describe('Todo Controls', () => {
+    it('should remove the todo when you click on its remove button', () => {
+      removeTodo(todos[1]);
+      verifyTodoList();
+    });
+
+    it('should mark the todo completed when the user clicks the checkbox', () => {
+      toggleTodo(todos[2]);
+      verifyTodoList();
+    });
+
+    it('should show how many todos are incomplete', () => {
+      cy.get('.footer > .todo-count').should('contain', '3 items left');
+      toggleTodo(todos[2]);
+      verifyTodoList();
+      cy.get('.footer > .todo-count').should('contain', '4 items left');
+      toggleTodo(todos[2]);
+      toggleTodo(todos[4]);
+      verifyTodoList();
+      cy.get('.footer > .todo-count').should('contain', '2 items left');
+      removeTodo(todos[2]);
+      removeTodo(todos[3]);
+      verifyTodoList();
+      cy.get('.footer > .todo-count').should('contain', '1 item left');
+    });
+
+
+    it('should toggle all todos when the toggle all switch is clicked', () => {});
+
+    it('should remove all completed todos when \'Clear completed\' is clicked', () => {});
   });
 
-  it('should mark the todo completed when the user clicks the checkbox', () => {
-    toggleTodo('the third todo in the list');
-    verifyTodoList();
+  describe('Filters', () => {
+    // make sure 'All' filter is selected
+    beforeEach(() => {
+      cy.get('.footer > .filters > li > a').eq(0).click();
+    });
+
+    after(() => {
+      cy.get('.footer > .filters > li > a').eq(0).click();
+    })
+
+    it('should show only incomplete todos when the user clicks \'Active\'', () => {
+      cy.get('.footer > .filters > li > a').eq(1).click();
+      cy.get('app-todo-list').find('app-todo').should('have.length', 1);
+      toggleTodo(todos[0]);
+      cy.get('app-todo-list').find('app-todo').should('have.length', 0);
+    });
+
+    it('should show only complete todos when the user clicks\'Completed\'', () => {
+      cy.get('.footer > .filters > li > a').eq(2).click();
+      cy.get('app-todo-list').find('app-todo').should('have.length', 2);
+      toggleTodo(todos[4]);
+      cy.get('app-todo-list').find('app-todo').should('have.length', 1);
+      toggleTodo(todos[0]);
+      cy.get('app-todo-list').find('app-todo').should('have.length', 0);
+    });
+
   });
-
-  it('should show how many todos are incomplete', () => {
-    cy.get('.footer > .todo-count').should('contain', '3 items left');
-    toggleTodo('the third todo in the list');
-    verifyTodoList();
-    cy.get('.footer > .todo-count').should('contain', '4 items left');
-    toggleTodo('the third todo in the list');
-    toggleTodo('and then there were five');
-    verifyTodoList();
-    cy.get('.footer > .todo-count').should('contain', '2 items left');
-    removeTodo('the third todo in the list');
-    removeTodo('number 4');
-    verifyTodoList();
-    cy.get('.footer > .todo-count').should('contain', '1 item left');
-  });
-
-  it('should show only incomplete todos when the user clicks \'Active\'', () => {});
-
-  it('should show only complete todos when the user clicks\'Completed\'', () => {});
-
-  it('should toggle all todos when the toggle all switch is clicked', () => {});
-
-  it('should remove all completed todos when \'Clear completed\' is clicked', () => {});
 });
