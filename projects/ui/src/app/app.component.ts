@@ -26,7 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.updateTodos();
     });
     this.router.events.subscribe((event) => {
-      if(event instanceof NavigationEnd) {
+      if (event instanceof NavigationEnd) {
         this.statusFilter = this.router.url.slice(1, this.router.url.length);
       }
     });

@@ -1,5 +1,5 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {Todo} from "./todo.model";
+import {Todo} from './todo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +7,9 @@ import {Todo} from "./todo.model";
 export class TodoListService {
 
   public onChange: EventEmitter<any>;
-  //change this boolean if you don't want to use local storage
-  private useLocalStorage = true;
-  private storageID = "todos-angular";
+  // change this boolean if you don't want to use local storage
+  private useLocalStorage = false;
+  private storageID = 'todos-angular';
   private todos: Todo[];
   private editingTodo: Todo;
 

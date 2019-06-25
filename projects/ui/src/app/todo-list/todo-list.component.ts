@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Todo} from "../common/todo.model";
-import {TodoListService} from "../common/todo-list.service";
-import {Subscription} from "rxjs";
-import {NavigationEnd, Router} from "@angular/router";
+import {Todo} from '../common/todo.model';
+import {TodoListService} from '../common/todo-list.service';
+import {Subscription} from 'rxjs';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
   selector: 'app-todo-list',
@@ -15,18 +15,20 @@ export class TodoListComponent implements OnInit, OnDestroy {
   todos: Todo[];
   allChecked: boolean;
 
-  constructor(private todoListService: TodoListService, private router: Router) { }
-
-  ngOnInit() {
+  constructor(private todoListService: TodoListService, private router: Router) {
     this.subscription = this.todoListService.onChange.subscribe(() => {
       this.updateList();
     });
     this.router.events.subscribe((event) => {
-      if(event instanceof NavigationEnd) {
+      if (event instanceof NavigationEnd) {
         this.updateList();
       }
     });
     this.allChecked = false;
+  }
+
+  ngOnInit() {
+    this.updateList();
   }
 
   updateList() {
@@ -35,8 +37,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
       this.todos = this.todos.filter((todo) => {
         return !todo.completed;
       });
-    }
-    else if (this.router.url === '/completed') {
+    } else if (this.router.url === '/completed') {
       this.todos = this.todos.filter((todo) => {
         return todo.completed;
       });
