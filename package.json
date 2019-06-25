@@ -1,5 +1,5 @@
 {
-  "name": "angular7",
+  "name": "todo-mvc",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
