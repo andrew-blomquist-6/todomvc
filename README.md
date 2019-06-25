@@ -22,5 +22,5 @@ The app will automatically reload if you change any of the source files.
 
 ## Branch-specific Documentation
 
-Branch specific documentation will go here.
-Please make sure to check this section when checking out a new branch.
+Execute `npm start` to run the graphQL server. 
+You can go to `http://localhost:8080/graphql` to see a nice little interface for testing queries and mutations.
