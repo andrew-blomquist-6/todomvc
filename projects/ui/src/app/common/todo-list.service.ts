@@ -4,7 +4,7 @@ import {Todo} from './todo.model';
 import {Apollo} from 'apollo-angular';
 import {Subscription} from 'rxjs';
 import {ADD_TODO, DELETE_TODO, GET_TODO_LIST, UPDATE_TODO} from './graphql.constants';
-import {take} from "rxjs/operators";
+import {take} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
