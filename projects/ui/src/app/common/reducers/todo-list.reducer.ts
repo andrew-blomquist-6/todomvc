@@ -63,10 +63,11 @@ function applyUpdateTodo(state, action) {
 }
 
 function applyRemoveTodo(state, action) {
-  state.list.splice(action.index, 1);
   return {
     ...state,
-    list: state.list
+    list: state.list.filter((todo, index) => {
+      return action.index !== index;
+    })
   };
 }
 
