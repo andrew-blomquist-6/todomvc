@@ -9,13 +9,13 @@
     <app-todo-list></app-todo-list>
   </section>
   <footer class="footer" *ngIf="todos.length" ng-cloak>
-					<span class="todo-count">
-            <strong>{{remainingCount}}</strong>
-            <span [ngPlural]="remainingCount">
-              <ng-template ngPluralCase="=1"> item left</ng-template>
-              <ng-template ngPluralCase="other"> items left</ng-template>
-            </span>
-					</span>
+    <span class="todo-count">
+      <strong>{{remainingCount}}</strong>
+      <span [ngPlural]="remainingCount">
+        <ng-template ngPluralCase="=1"> item left</ng-template>
+        <ng-template ngPluralCase="other"> items left</ng-template>
+      </span>
+    </span>
     <ul class="filters">
       <li>
         <a [ngClass]="{selected: statusFilter == ''} " (click)="goToPage('/')">All</a>

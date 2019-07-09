@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Todo} from '../common/todo.model';
 import {Subject} from 'rxjs';
-import {NavigationEnd, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {State} from '../common/reducers';
 import {selectEditingTodo, selectTodoList} from '../common/selectors/todo-list.selector';
 import {take, takeUntil} from 'rxjs/operators';
 import {UpdateTodo} from '../common/actions/todo-list.actions';
+import {NavigationEnd, Router} from '@angular/router';
 
 @Component({
   selector: 'app-todo-list',
@@ -19,7 +19,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   todos: Todo[];
   editingTodo: Todo;
-  allChecked: boolean;
+  allChecked = false;
 
   constructor(private router: Router,
               private store: Store<State>) {}
@@ -47,7 +47,6 @@ export class TodoListComponent implements OnInit, OnDestroy {
           });
       }
     });
-    this.allChecked = false;
   }
 
   updateList() {
@@ -72,8 +71,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
     return todo === this.editingTodo;
   }
 
+  // Tried to use Ng-Model for this, but the first click didn't work as expected
   markAll() {
-    // TODO: this doesn't work on the very first click
+    this.allChecked = !this.allChecked;
     this.todos.forEach((todo, index) => {
       todo.completed = this.allChecked;
       this.store.dispatch(new UpdateTodo(todo, index));
