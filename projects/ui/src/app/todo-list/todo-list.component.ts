@@ -14,11 +14,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
   todos: Todo[];
-  allChecked: boolean;
+  allChecked = false;
 
-  constructor(private todoListService: TodoListService, private router: Router) { }
-
-  ngOnInit() {
+  constructor(private todoListService: TodoListService, private router: Router) {
     this.subscription = this.todoListService.onChange.subscribe(() => {
       this.updateList();
     });
@@ -27,8 +25,10 @@ export class TodoListComponent implements OnInit, OnDestroy {
         this.updateList();
       }
     });
+  }
+
+  ngOnInit() {
     this.updateList();
-    this.allChecked = false;
   }
 
   updateList() {
@@ -54,7 +54,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
     return todo === this.todoListService.getEditingTodo();
   }
 
+  // Tried to use Ng-Model for this, but the first click didn't work as expected
   markAll() {
+    this.allChecked = !this.allChecked;
     this.todos.forEach(todo => {
       todo.completed = this.allChecked;
       this.todoListService.updateTodo(todo);

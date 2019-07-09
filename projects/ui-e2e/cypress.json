@@ -1,0 +1,9 @@
+{
+  "baseUrl": "http://localhost:4200",
+  "fileServerFolder": "src",
+  "fixturesFolder": "src/fixtures",
+  "integrationFolder": "src/integration",
+  "pluginsFile": "src/plugins/index.js",
+  "supportFile": false,
+  "videoUploadOnPasses": false
+}

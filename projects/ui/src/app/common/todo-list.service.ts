@@ -1,10 +1,10 @@
 
-import {EventEmitter, Injectable, OnDestroy} from '@angular/core';
-import {Todo} from './todo.model';
 import {Apollo} from 'apollo-angular';
 import {Subscription} from 'rxjs';
 import {ADD_TODO, DELETE_TODO, GET_TODO_LIST, UPDATE_TODO} from './graphql.constants';
 import {take} from 'rxjs/operators';
+import {EventEmitter, Injectable, OnDestroy} from '@angular/core';
+import {Todo} from './todo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,9 @@ import {take} from 'rxjs/operators';
 export class TodoListService implements OnDestroy {
 
   public onChange: EventEmitter<any>;
+  // change this boolean if you don't want to use local storage
+  private useLocalStorage = false;
+  private storageID = 'todos-angular';
   private todos: Todo[];
   private editingTodo: Todo;
   private querySubscription: Subscription;

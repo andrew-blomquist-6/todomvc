@@ -12,13 +12,17 @@ A branch may have additional information in their README, so please check below 
 
 This section is under construction -- I need to learn more.
 
-Please make sure you have yarn and tbe angular-cli installed.
+Please make sure you have yarn and the angular-cli installed.
 
 ## Development
 
 Run `ng serve` to build and serve platform-ui web. 
 Navigate to `http://localhost:4200/` to view the website.
 The app will automatically reload if you change any of the source files.
+
+## Testing
+
+Once you have your local environment running, you can execute `yarn run e2e:open` to open up Cypress for e2e testing.
 
 ## Branch-specific Documentation
 
