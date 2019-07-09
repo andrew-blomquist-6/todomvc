@@ -28,3 +28,6 @@ Once you have your local environment running, you can execute `yarn run e2e:open
 
 Execute `npm start` to run the graphQL server. 
 You can go to `http://localhost:8080/graphql` to see a nice little interface for testing queries and mutations.
+
+E2E Tests won't work until we can figure out a way to properly mock graphQL requests. 
+Alternatively, you could run the graphQL server for the tests, but that doesn't quite fit the spirit of e2e testing. 

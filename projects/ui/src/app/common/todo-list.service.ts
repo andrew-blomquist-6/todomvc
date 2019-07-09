@@ -12,9 +12,6 @@ import {Todo} from './todo.model';
 export class TodoListService implements OnDestroy {
 
   public onChange: EventEmitter<any>;
-  // change this boolean if you don't want to use local storage
-  private useLocalStorage = false;
-  private storageID = 'todos-angular';
   private todos: Todo[];
   private editingTodo: Todo;
   private querySubscription: Subscription;
